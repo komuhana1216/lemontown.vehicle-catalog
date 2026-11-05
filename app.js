@@ -4,7 +4,7 @@
  * For restricted sheets, publish the worksheet as CSV and provide its URL in SHEET_CSV_URL.
  */
 const SHEET_ID = '1xhRXg4O3q2Hy5rZyCjFNpGnm-CJt0RAFAJQ56LGVLm8';
-const SHEET_CSV_URL = window.SHEET_CSV_URL || `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
+const SHEET_CSV_URL = window.SHEET_CSV_URL || https://docs.google.com/spreadsheets/d/e/2PACX-1vQH3soRoZv8m1DJKW2L_4lU201bv0U9jjwccbHNe01MxYb5lgSAwZQqpPwRYWNbK_hMNDcNyIfn-qsM/pub?output=csv;
 
 const FIELD_MAP = {
   name: ['車名', '車両名', '乗り物名', 'name', 'vehicle'],
