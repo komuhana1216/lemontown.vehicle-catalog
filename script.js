@@ -4,8 +4,11 @@
  * Vehicle Catalog Frontend
  */
 
-// Google Apps ScriptのウェブアプリURLを設定
+// Google Apps ScriptのウェブアプリURL
 const API_URL = "https://script.google.com/macros/s/AKfycbyInWaKkpQJ2EJPJQN2qROJ6VNolmuw9fQqEQD8lCkOnCbb0Jdl30J_W2T1-ocnKqOPFg/exec";
+
+// GitHubリポジトリ内の画像フォルダ
+const IMAGE_BASE = "assets/vehicles/";
 
 // Elements
 const vehicleGrid = document.getElementById("vehicleGrid");
@@ -33,8 +36,7 @@ const categoryNames = {
 document.addEventListener("DOMContentLoaded", () => {
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
-      const category = tab.dataset.category;
-      changeCategory(category);
+      changeCategory(tab.dataset.category);
     });
   });
 
@@ -62,22 +64,19 @@ function loadVehicles() {
 
   const callbackName = "receiveVehicles";
 
-  // 以前のスクリプトを削除
   const oldScript = document.getElementById("vehicle-api-script");
   if (oldScript) oldScript.remove();
 
-  // タイムアウト
   let completed = false;
 
   const timeout = setTimeout(() => {
-    if (!completed) {
-      completed = true;
-      delete window[callbackName];
-      showError("データ取得がタイムアウトしました。");
-    }
+    if (completed) return;
+
+    completed = true;
+    delete window[callbackName];
+    showError("データ取得がタイムアウトしました。");
   }, 15000);
 
-  // GASからのJSONP受信
   window[callbackName] = function(data) {
     if (completed) return;
 
@@ -159,7 +158,9 @@ function renderVehicles() {
     const name = escapeHTML(vehicle.name);
     const category = escapeHTML(vehicle.category);
     const price = formatPrice(vehicle.price);
-    const image = safeImageUrl(vehicle.image);
+
+    // GitHub内の画像ファイル名から画像パスを作成
+    const image = getVehicleImagePath(vehicle.image);
 
     return `
       <article class="vehicle-card">
@@ -173,7 +174,6 @@ function renderVehicles() {
                   src="${escapeHTML(image)}"
                   alt="${name}"
                   loading="lazy"
-                  onerror="this.style.display='none';this.nextElementSibling.hidden=false;"
                 >
                 <div class="image-placeholder" hidden>
                   LEMON VEHICLE
@@ -195,7 +195,7 @@ function renderVehicles() {
         <div class="vehicle-content">
 
           <p class="vehicle-location">
-            LOCATION / ${category}
+            販売場所 / ${category}
           </p>
 
           <h3 class="vehicle-name">
@@ -212,6 +212,43 @@ function renderVehicles() {
       </article>
     `;
   }).join("");
+
+  // 画像が見つからない場合はプレースホルダーを表示
+  vehicleGrid.querySelectorAll(".vehicle-image img").forEach(img => {
+    img.addEventListener("error", () => {
+      img.style.display = "none";
+
+      const placeholder = img.nextElementSibling;
+      if (placeholder) {
+        placeholder.hidden = false;
+      }
+    }, { once: true });
+  });
+}
+
+// GitHubリポジトリ内の画像パスを作成
+function getVehicleImagePath(value) {
+  const filename = String(value || "").trim();
+
+  if (!filename) return "";
+
+  // ファイル名だけを許可。フォルダ移動などは不可。
+  if (
+    filename.includes("/") ||
+    filename.includes("\\") ||
+    filename === "." ||
+    filename === ".." ||
+    filename.includes("..")
+  ) {
+    return "";
+  }
+
+  // 現在のページURLを基準にするため、
+  // GitHub Pagesのプロジェクトサイトにも対応
+  return new URL(
+    IMAGE_BASE + encodeURIComponent(filename),
+    document.baseURI
+  ).href;
 }
 
 // 価格フォーマット
@@ -227,23 +264,6 @@ function formatPrice(value) {
   }
 
   return "¥" + numeric.toLocaleString("ja-JP");
-}
-
-// 画像URLの安全確認
-function safeImageUrl(value) {
-  const url = String(value || "").trim();
-
-  if (!url) return "";
-
-  try {
-    const parsed = new URL(url);
-
-    if (parsed.protocol !== "https:") return "";
-
-    return parsed.href;
-  } catch {
-    return "";
-  }
 }
 
 // HTMLエスケープ
