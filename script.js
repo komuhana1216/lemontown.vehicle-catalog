@@ -17,6 +17,7 @@ const currentCategory = document.getElementById("currentCategory");
 const errorMessage = document.getElementById("errorMessage");
 const emptyMessage = document.getElementById("emptyMessage");
 const retryButton = document.getElementById("retryButton");
+const vehicleSearch = document.getElementById("vehicleSearch");
 
 const tabs = document.querySelectorAll(".tab");
 
@@ -43,6 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
   retryButton.addEventListener("click", loadVehicles);
 
   loadVehicles();
+});
+
+vehicleSearch.addEventListener("input", () => {
+  renderVehicles();
 });
 
 // JSONPでデータ取得
@@ -134,21 +139,39 @@ function changeCategory(category) {
   renderVehicles();
 }
 
-// 車両表示
+
+// 車両表示・検索
 function renderVehicles() {
   errorMessage.hidden = true;
 
-  const filtered = activeCategory === "ALL"
-    ? vehicles
-    : vehicles.filter(vehicle =>
-        vehicle.category === activeCategory
-      );
+  const keyword = vehicleSearch.value
+    .trim()
+    .toLowerCase();
+
+  const filtered = vehicles.filter(vehicle => {
+    const matchesCategory =
+      activeCategory === "ALL" ||
+      vehicle.category === activeCategory;
+
+    const matchesName =
+      String(vehicle.name || "")
+        .toLowerCase()
+        .includes(keyword);
+
+    return matchesCategory && matchesName;
+  });
 
   vehicleCount.textContent = filtered.length;
 
   if (filtered.length === 0) {
     vehicleGrid.innerHTML = "";
     emptyMessage.hidden = false;
+
+    emptyMessage.querySelector("p").textContent =
+      keyword
+        ? "NO MATCHING VEHICLES FOUND."
+        : "NO VEHICLES FOUND.";
+
     return;
   }
 
@@ -158,15 +181,11 @@ function renderVehicles() {
     const name = escapeHTML(vehicle.name);
     const category = escapeHTML(vehicle.category);
     const price = formatPrice(vehicle.price);
-
-    // GitHub内の画像ファイル名から画像パスを作成
     const image = getVehicleImagePath(vehicle.image);
 
     return `
       <article class="vehicle-card">
-
         <div class="vehicle-image">
-
           ${
             image
               ? `
@@ -186,34 +205,25 @@ function renderVehicles() {
               `
           }
 
-          <span class="category-label">
-            ${category}
-          </span>
-
+          <span class="category-label">${category}</span>
         </div>
 
         <div class="vehicle-content">
-
           <p class="vehicle-location">
             販売場所 / ${category}
           </p>
 
-          <h3 class="vehicle-name">
-            ${name}
-          </h3>
+          <h3 class="vehicle-name">${name}</h3>
 
           <div class="vehicle-price">
             <small>PRICE</small>
             <strong>${price}</strong>
           </div>
-
         </div>
-
       </article>
     `;
   }).join("");
 
-  // 画像が見つからない場合はプレースホルダーを表示
   vehicleGrid.querySelectorAll(".vehicle-image img").forEach(img => {
     img.addEventListener("error", () => {
       img.style.display = "none";
@@ -225,6 +235,7 @@ function renderVehicles() {
     }, { once: true });
   });
 }
+
 
 // GitHubリポジトリ内の画像パスを作成
 function getVehicleImagePath(value) {
