@@ -1,36 +1,117 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0d1117">
-  <title>Vehicle Catalog</title>
-  <link rel="stylesheet" href="./styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#101010">
+  <meta name="description" content="LEMON VEHICLE - LemonTown Vehicle Catalog">
+
+  <title>LEMON VEHICLE | LemonTown</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <header class="hero">
-    <div class="hero-inner">
-      <p class="eyebrow">VEHICLE CATALOG</p>
-      <h1>乗り物を探す</h1>
-      <p class="intro">価格と販売場所から、お目当ての一台を見つけましょう。</p>
-      <label class="search-wrap">
-        <span class="sr-only">車名で検索</span>
-        <span aria-hidden="true">⌕</span>
-        <input id="search" type="search" placeholder="車名で検索" autocomplete="off">
-      </label>
-    </div>
+
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-mark">L</span>
+      <span>LEMON <b>VEHICLE</b></span>
+    </a>
+
+    <span class="header-label">LEMON TOWN / DEALERSHIP</span>
   </header>
 
-  <main class="content">
-    <nav id="tabs" class="tabs" aria-label="乗り物のカテゴリ"></nav>
-    <div class="list-heading">
-      <div><p class="eyebrow">COLLECTION</p><h2 id="category-title">ALL</h2></div>
-      <p id="result-count" class="result-count" aria-live="polite"></p>
-    </div>
-    <div id="status" class="status" role="status">シートからデータを読み込んでいます…</div>
-    <section id="catalog" class="catalog" aria-live="polite"></section>
+  <main>
+
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">LEMON TOWN VEHICLE DEALERSHIP</p>
+
+        <h1>
+          FIND YOUR<br>
+          <span>NEXT RIDE.</span>
+        </h1>
+
+        <p class="hero-description">
+          Discover your next vehicle.<br>
+          Explore the vehicle collection of LemonTown.
+        </p>
+
+        <div class="hero-bottom">
+          <span>VEHICLE COLLECTION</span>
+          <span>EST. LEMONTOWN</span>
+        </div>
+      </div>
+
+      <div class="hero-decoration">
+        <span>LV</span>
+      </div>
+    </section>
+
+    <section class="catalog">
+
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">OUR COLLECTION</p>
+          <h2>VEHICLE CATALOG</h2>
+        </div>
+
+        <div class="vehicle-count">
+          <span id="vehicleCount">0</span>
+          <small>VEHICLES</small>
+        </div>
+      </div>
+
+      <nav class="category-tabs" aria-label="車両カテゴリ">
+        <button class="tab active" data-category="ALL">ALL</button>
+        <button class="tab" data-category="普通車">普通車</button>
+        <button class="tab" data-category="高級車">高級車</button>
+        <button class="tab" data-category="航空機">航空機</button>
+        <button class="tab" data-category="ボート">ボート</button>
+      </nav>
+
+      <div class="catalog-info">
+        <span id="currentCategory">ALL VEHICLES</span>
+        <span>LEMON VEHICLE DATABASE</span>
+      </div>
+
+      <div id="vehicleGrid" class="vehicle-grid">
+
+        <div class="loading">
+          <div class="loader"></div>
+          <p>LOADING VEHICLES...</p>
+        </div>
+
+      </div>
+
+      <div id="errorMessage" class="error-message" hidden>
+        <p>VEHICLE DATA COULD NOT BE LOADED.</p>
+        <button id="retryButton">RETRY</button>
+      </div>
+
+      <div id="emptyMessage" class="empty-message" hidden>
+        <p>NO VEHICLES FOUND.</p>
+      </div>
+
+    </section>
+
   </main>
-  <footer><span>VEHICLE CATALOG</span><span>Google Sheets のデータを表示</span></footer>
-  <script src="./app.js"></script>
+
+  <footer class="footer">
+    <div class="footer-logo">LEMON VEHICLE</div>
+    <p>LEMON TOWN VEHICLE DEALERSHIP</p>
+    <p class="copyright">
+      © 2026 LEMON TOWN. ALL RIGHTS RESERVED.
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
