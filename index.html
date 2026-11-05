@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1117">
+  <title>Vehicle Catalog</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">VEHICLE CATALOG</p>
+      <h1>乗り物を探す</h1>
+      <p class="intro">価格と販売場所から、お目当ての一台を見つけましょう。</p>
+      <label class="search-wrap">
+        <span class="sr-only">車名で検索</span>
+        <span aria-hidden="true">⌕</span>
+        <input id="search" type="search" placeholder="車名で検索" autocomplete="off">
+      </label>
+    </div>
+  </header>
+
+  <main class="content">
+    <nav id="tabs" class="tabs" aria-label="乗り物のカテゴリ"></nav>
+    <div class="list-heading">
+      <div><p class="eyebrow">COLLECTION</p><h2 id="category-title">ALL</h2></div>
+      <p id="result-count" class="result-count" aria-live="polite"></p>
+    </div>
+    <div id="status" class="status" role="status">シートからデータを読み込んでいます…</div>
+    <section id="catalog" class="catalog" aria-live="polite"></section>
+  </main>
+  <footer><span>VEHICLE CATALOG</span><span>Google Sheets のデータを表示</span></footer>
+  <script src="./app.js"></script>
+</body>
+</html>
